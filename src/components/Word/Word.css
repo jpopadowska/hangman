@@ -1,0 +1,19 @@
+.Word {
+  margin-top: 40px;
+  font-size: 40px;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 40px;
+}
+
+.visible {
+  visibility: visible;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.LetterContainer {
+  border-bottom: 3px solid black;
+}

@@ -1,0 +1,26 @@
+.Alphabet {
+  text-align: center;
+}
+
+.Disabled {
+  color: #808080;
+  background-color: #efefef;
+  padding: 8px;
+  border: 1px solid #808080;
+  width: 36px;
+  margin: 4px;
+  border-radius: 3px;
+}
+
+.Active {
+  padding: 8px;
+  border: 1px solid black;
+  border-radius: 3px;
+  cursor: pointer;
+  width: 36px;
+  margin: 4px;
+}
+
+.Active:hover {
+  background-color: aliceblue;
+}

@@ -1,23 +1,104 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Alphabet from "./components/Alphabet/Alphabet";
+import Word from "./components/Word/Word";
+import { useEffect, useState } from "react";
+import Hangman from "./components/Hangman/Hangman";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentWord, setUserName } from "./redux/userSlice";
 
 function App() {
+  const [guessedLetters, setGuessedLetters] = useState([]);
+  const [errors, setErrors] = useState(0);
+  const dispatch = useDispatch();
+  const currentWord = useSelector((state) => state.userReducer.currentWord);
+  const userNameFromStore = useSelector((state) => state.userReducer.userName);
+  const [userNameInput, setUserNameInput] = useState("");
+  const [openPopUp, setOpenPopUp] = useState(true);
+
+  const getCurrentWord = () => {
+    axios
+      .get("http://localhost:8080/api/hangman/word")
+      .then((response) => dispatch(setCurrentWord(response.data)))
+      .catch((error) => console.log(error));
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log(userNameInput);
+    axios
+      .post(
+        "http://localhost:8080/api/hangman/player",
+        JSON.stringify(userNameInput)
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          setOpenPopUp(false);
+          dispatch(setUserName(userNameInput));
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const handleNewGame = () => {
+    axios
+      .post("http://localhost:8080/api/hangman/newGame")
+      .then((response) => {
+        if (response.status === 200) {
+          setOpenPopUp(true);
+          //clean store
+          setGuessedLetters([]);
+          setErrors(0);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  useEffect(() => {
+    handleNewGame();
+    getCurrentWord();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="HangmanContainer">
+        <div className="Username">
+          <div>
+            UserName: <b>{userNameFromStore}</b>
+          </div>
+          <button onClick={handleNewGame}>New Game</button>
+          <div>
+            Score: <b>{0}</b>
+          </div>
+        </div>
+        <Alphabet
+          guessedLetters={guessedLetters}
+          setGuessedLetters={setGuessedLetters}
+          setErrors={setErrors}
+          wordToGuess={currentWord}
+          userName={userNameFromStore}
+        />
+        <Word guessedLetters={guessedLetters} wordToGuess={currentWord} />
+        <Hangman errors={errors} />
+        {errors >= 6 && alert("Przegrałeś")}
+      </div>
+      {openPopUp && (
+        <div className="PopUp">
+          <div className="PopUpContent">
+            <form className="Form" onSubmit={handleSubmit}>
+              <div>UserName</div>
+              <input
+                onChange={(e) => setUserNameInput(e.target.value)}
+                className="input"
+                id="input"
+                type="text"
+                required
+              />
+              <button type="submit">Play</button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
