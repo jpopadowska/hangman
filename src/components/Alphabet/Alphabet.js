@@ -5,8 +5,8 @@ function Alphabet({
   guessedLetters,
   setGuessedLetters,
   setErrors,
-  wordToGuess,
   userName,
+  setScore,
 }) {
   const al = [
     "A",
@@ -44,21 +44,19 @@ function Alphabet({
 
   const handleClickLetter = (letter) => {
     setGuessedLetters([...guessedLetters, letter]);
-    if (!wordToGuess.toUpperCase().split("").includes(letter))
-      setErrors((prev) => prev + 1);
 
-    fetch("http://localhost:8080/api/hangman/word/guess", {
-      method: "POST",
-      headers: {
-        accept: "*/*",
-        "Content-Type": "application/json",
-        mode: "no-cors",
-      },
-      body: JSON.stringify({
+    axios
+      .post("http://localhost:8080/api/hangman/word/guess", {
         letter: letter,
         playerName: userName,
-      }),
-    }).then((response) => console.log(response));
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setErrors(response.data.mistakes);
+          setScore(response.data.score);
+        }
+      })
+      .catch((error) => console.log(error));
   };
 
   return (

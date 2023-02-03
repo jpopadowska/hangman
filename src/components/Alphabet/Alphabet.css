@@ -10,6 +10,7 @@
   width: 36px;
   margin: 4px;
   border-radius: 3px;
+  pointer-events: none;
 }
 
 .Active {

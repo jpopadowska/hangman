@@ -3,8 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   currentWord: "",
   userName: "",
-  score: 0,
-  mistakes: 0,
 };
 
 export const userSlice = createSlice({

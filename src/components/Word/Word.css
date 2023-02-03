@@ -16,4 +16,6 @@
 
 .LetterContainer {
   border-bottom: 3px solid black;
+  width: 40px;
+  text-align: center;
 }
