@@ -24,6 +24,7 @@ function Alphabet({
     "J",
     "K",
     "L",
+    "Ł",
     "M",
     "N",
     "Ń",

@@ -37,6 +37,7 @@ function App() {
         if (response.status === 200) {
           setOpenPopUp(false);
           dispatch(setUserName(userNameInput));
+          handleNewGame1(userNameInput);
         }
       })
       .catch((error) => console.log(error));
@@ -58,8 +59,21 @@ function App() {
       .catch((error) => console.log(error));
   };
 
+  const handleNewGame1 = (userName) => {
+    axios
+      .post("http://localhost:8080/api/hangman/newGame1", {
+        playerName: userName,
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setShowLostPopUp(false);
+          getCurrentWord();
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
   useEffect(() => {
-    handleNewGame();
     getCurrentWord();
   }, []);
 
